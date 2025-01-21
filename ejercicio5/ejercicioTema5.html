@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>RRHH</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 50px;
+            background: linear-gradient(to right, #a3dfec, #2193b0);
+            color: #202f3d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #formulario {
+            text-align: center;
+            padding: 30px;
+            background-color: #dceff7;
+            border-radius: 15px;
+            box-shadow: 0 15px 0px rgba(0, 0, 0, 0.2);
+            width: 800px;
+        }
+
+        .enviar {
+            background-color: rgb(189, 241, 111);
+            font-size: 20px;
+        }
+
+        .resetear {
+            background-color: rgb(112, 112, 110);
+            font-size: 20px;
+        }
+
+        .contra {
+            font-size: 12px;
+            color: black;
+        }
+
+        .fecha {
+            width: 60px;
+        }
+
+        fieldset:hover {
+            background-color: #c6e0eb;
+        }
+
+        .error {
+            color: red;
+            text-align: left;
+            margin-left: 10px;
+        }
+
+        img{
+            width: 200px;
+        }
+        
+        #logo{
+            display: flex;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div id="formulario">
+        <div id="logo">
+            <img src="logo.png" alt="logo">
+            <h1>Registro de Recursos Humanos</h1>
+        </div><br><br>
+        <div id="error" class="error"></div><br>
+        <form onsubmit="return validacionFormulario();" action="action.html">
+            <fieldset>
+                <legend>Datos personales</legend><br>
+                Nombre <input type="text" name="nombre" required><br><br>
+                Apellidos <input type="text" name="apellidos" required><br><br>
+                Género<br>
+                <input type="radio" name="género" value="hombre" required> Hombre
+                <input type="radio" name="género" value="mujer" required> Mujer<br>
+                <p>Fecha de nacimiento</p>
+                Día <input class="fecha" type="number" name="dia" required>
+                Mes <input class="fecha" type="number" name="mes" required>
+                Año <input class="fecha" type="number" name="anio" required><br><br>
+                Ciudad <input type="text" id="ciudad" name="ciudad" required><br><br>
+                Dirección <input type="text" id="direccion" name="direccion" required><br><br>
+                Curriculum (PDF) <input type="file" name="fichero" accept=".pdf" required><br><br>
+            </fieldset><br>
+
+            <fieldset>
+                <legend>Datos de contacto</legend><br>
+                Correo electrónico <input type="text" name="email" required><br><br>
+                Número de teléfono <input type="number" name="telefono" required><br><br>
+            </fieldset><br>
+
+            <fieldset>
+                <legend>Usuario</legend>
+                <p>Para crear tu usuario necesitamos que intruzcas: </p>
+                Usuario <input type="text" name="user" required><br><br>
+                Contraseña <input type="password" name="password" minlength="4" required><br>
+                <p class="contra">*La contraseña debe tener un mínimo de 4 carácteres y al menos un carácter numérico
+                </p>
+            </fieldset><br>
+
+            <input type="checkbox" name="aceptar">Acepto recibir alertas<br><br>
+
+
+            <input class="enviar" type="submit" value="Enviar">
+            <input class="resetear" type="reset" value="Resetear"><br><br>
+
+            <input type="button" name="chequeaCookie" value="Chequear las cookies" onclick="checkCookie();"><br><br>
+
+
+            <form>
+                Selecciona el color de fondo
+                    <select name="colorFondo">
+                        <option value="defecto">Por defecto</option>
+                        <option value="blanco">Blanco</option>
+                    </select>
+                <br><br>
+                <input type="button" value="Guardar color" onclick="guardarColor();">
+            </form>
+            
+        </form>
+    </div>
+
+
+
+    <script>
+        /*TEMA 5_1*/
+        //RATON
+        var formulario = document.getElementById('formulario');
+
+        //el cursor entra en el formulario y cambia de color
+        formulario.addEventListener('mouseover', function () {
+            //console.log('Ratón dentro del formulario'); 
+            formulario.style.border = "4px inset #1d6a8b";
+        });
+
+        formulario.addEventListener('mouseout', function () {
+            //console.log('Ratón fuera del formulario'); 
+            formulario.style.border = "";
+        });
+
+
+        //TECLA
+        var ciudad = document.getElementById('ciudad');
+
+        //cuando se introduce un numero en el campo ciudad muestra un error
+        ciudad.addEventListener('keydown', function (event) {
+            var evento = event.key;
+            // Verifica si la tecla presionada es un número
+            if (evento >= '0' && evento <= '9') {
+                // Previene que se ingrese el número
+                event.preventDefault();
+                // Muestra el mensaje de error
+                alert("Debes introducir una palabra");
+            }
+        });
+
+        //Cuando la tecla se deja de presionar, la primera letra de la palabra se cambia a mayuscula
+        ciudad.addEventListener('keyup', function () {
+            ciudad.value = ciudad.value.charAt(0).toUpperCase() + ciudad.value.slice(1);
+        });
+
+
+        //HTML
+        //cuando la pagina cargue muestra un mensaje
+        window.onload = function () {
+            alert("La página se ha cargado completamente");
+        }
+
+        //Mostrar tamaño al redimensionar pantalla
+        window.onresize = function () {
+            actualizarTamañoVentana();
+        };
+        // Función para mostrar el tamaño actual de la ventana
+        function actualizarTamañoVentana() {
+            var ancho = window.innerWidth;
+            var alto = window.innerHeight;
+            var resizeInfo = document.getElementById('resizeInfo');
+            alert('Tamaño de la ventana: ' + ancho + ' x ' + alto + ' píxeles');
+        }
+
+
+        //TEMA 5_2
+        //Boton de reseteo
+        //Eleccion de genero con radios
+        //Utilizamos password en el input
+        //la contraseña tiene que tener minimo 4 carcteres
+        //adjuntamos en archivo, en este caso un .PDF que sera el cv
+
+
+        //TEMA 5_3
+        //Boton de reseteo y enviar cambio color y tamaño de letra
+        //Modifico el formulario creando un orden con la etiqueta '<fieldset>'
+        //Cuando el usuario marca en el checbox de alretas muestra un mensaje
+        function validacionFormulario() {
+            var errores = "";
+            document.getElementById("error").innerHTML = ''; // Limpiar errores anteriores
+
+            //funcion para mostrar cuando las alertas estan activas
+            function validarCondiciones() {
+                const aceptar = document.getElementsByName("aceptar")[0];
+                if (aceptar.checked) {
+                    return true;
+                }
+                return false;
+            }
+
+            //funcion para mostrar cuando el n de telefono no es de la extension indicada
+            function validarNumero() {
+                const telefono = document.getElementsByName("telefono")[0].value.trim();
+                if (telefono.length !== 9) {
+                    return false;
+                }
+                return true;
+            }
+
+            //funcion para validar la fecha de nacimiento
+            function validarFechaNacimiento() {
+                const dia = document.getElementsByName("dia")[0].value.trim();
+                const mes = document.getElementsByName("mes")[0].value.trim();
+                const anio = document.getElementsByName("anio")[0].value.trim();
+
+                if (dia >= 1 && dia <= 31 && mes >= 1 && mes <= 12 && anio >= 1900 && anio <= 2024) {
+                    return true;
+                }
+                return false;
+            }
+
+
+            //TEMA 5_4
+            //Valido el correo electronico para que sea del tipo : correo@electronico.com
+            function validaEmail() {
+                const email = document.getElementsByName("email")[0].value.trim();
+                const emailValidado = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+$/;
+
+                if (emailValidado.test(email)) {
+                    return true;
+                }
+                return false;
+            }
+
+            function validarPassword() {
+                const password = document.getElementsByName("password")[0].value.trim();
+                const patronPass = /\d/; //que al menos contenga un numero
+
+                if (patronPass.test(password)) {
+                    return true;
+                }
+                return false;
+            }
+
+            //Esto lo utilizo para mostrar los mensajes y no enviar el formulario si no es correcto
+            if (validarCondiciones()) {
+                alert("Alertas activadas");
+            }
+
+            if (!validarNumero()) {
+                errores += "- El número de teléfono debete tener 9 dígitos<br>";
+            }
+
+            if (!validarFechaNacimiento()) {
+                errores += "- La fecha de nacimiento es incorrecta<br>";
+            }
+
+            if (!validaEmail()) {
+                errores += "- El correo eéctronico es incorrecto";
+            }
+
+            if (!validarPassword()) {
+                errores += "- La contraseña debe tener al menos un carácter numérico";
+            }
+
+            if (errores !== "") {
+                document.getElementById("error").innerHTML = errores;
+                return false;
+            } else {
+                return true;
+            }
+
+        }
+
+        //TEMA 5_4 COOKIES
+        function getCookie(c_name) {
+            var i, x, y, ARRcookies = document.cookie.split(";");
+            for (i = 0; i < ARRcookies.length; i++) {
+                x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+                y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+                x = x.replace(/^\s+|\s+$/g, "");
+                if (x == c_name) {
+                    return unescape(y);
+                }
+            }
+            return "";
+        }
+
+        function setCookie(name, value, days) {
+            var date = new Date();
+            date.setDate(date.getDate() + days);
+            var valueC = escape(value) + ((days == null) ? "" : ";expires=" + date.toUTCString());
+            document.cookie = name + "=" + valueC;
+        }
+
+        function checkCookie() {
+            var nombreUsuario = document.getElementsByName("nombre")[0].value.trim();
+
+            // Si el campo nombre no está vacío, crea la cookie con ese nombre
+            if (nombreUsuario != "") {
+                //utiliza el nombre del formulario
+                var username = getCookie(nombreUsuario);  
+
+                if (username != "") {
+                    alert("Bienvenido nuevamente, " + username);
+                } else {
+                    // Si no se encuentra la cookie, guarda el nombre del usuario en una nueva cookie
+                    setCookie(nombreUsuario, nombreUsuario, 365);  // Guarda la cookie por 365 días
+                }
+
+                // Muestra el contenido de la cookie en una ventana emergente
+                var cookieData = getCookie(nombreUsuario);
+                if (cookieData != "") {
+                    var ventanaEmergente = window.open("", "Cookie Data", "width=300,height=200");
+                    ventanaEmergente.document.write("<h3>Datos de la Cookie:</h3>");
+                    ventanaEmergente.document.write("<p>Nombre de usuario: " + cookieData + "</p>");
+                } else {
+                    alert("No se encontraron datos en la cookie.");
+                }
+            } else {
+                alert("Por favor, ingresa tu nombre para crear una cookie.");
+            }           
+        }
+
+        //guardar color en una cookie
+        function setCookie(name, value, days) {
+            var date = new Date();
+            date.setDate(date.getDate() + days);
+            var valueC = escape(value) + ((days == null) ? "" : ";expires=" + date.toUTCString());
+            document.cookie = name + "=" + valueC;
+        }
+
+        // Función para obtener una cookie
+        function getCookie(c_name) {
+            var i, x, y, ARRcookies = document.cookie.split(";");
+            for (i = 0; i < ARRcookies.length; i++) {
+                x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+                y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+                x = x.replace(/^\s+|\s+$/g, "");
+                if (x == c_name) {
+                    return unescape(y);
+                }
+            }
+            return "";
+        }
+
+        // Función para guardar el color seleccionado en una cookie y cambiar el fondo
+        function guardarColor() {
+            var colorElegido = document.getElementsByName("colorFondo")[0].value;
+
+            // Guardar el color seleccionado en la cookie
+            setCookie("colorFondo", colorElegido, 365);
+
+            // Cambiar el color de fondo según el color elegido
+            if (colorElegido === "blanco") {
+                document.getElementById("formulario").style.background = "white";
+            } else {
+                document.getElementById("formulario").style.background = "";
+            }
+        }
+
+        // Al cargar la página, comprobar si hay una cookie con el color guardado
+        window.onload = function() {
+            var colorGuardado = getCookie("colorFondo");
+            if (colorGuardado === "blanco") {
+                document.getElementById("formulario").style.background = "white";
+            } else {
+                document.getElementById("formulario").style.background = ""; // Color predeterminado
+            }
+        }
+
+    </script>
+</body>
+
+</html>
