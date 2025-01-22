@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Prueba examen</title>
+    </head>
+    <body>
+        <h1>Usted ha salido del banco de 2DAW</h1>
+        <script>
+            //el valor por defecto de cada moneda
+            var valorDolar=1.10;
+            var valorEuro=0.92;
+
+            function cambio(){
+                //esta funcion sirve para cambiar dinero de una moneda a otra
+                //pide al usuario que introduzca la cantidad de cambio y le da un menu en el que puede elegir a que moneda desea cambiar
+                let cantidad=prompt("Introduce la cantidad que desea convertir");
+                let opcion=prompt("Elige la opcion que deseas\n"+"1. Euros a dolares\n"+"2. Dolares a euros");
+                opcion=parseInt(opcion);
+                
+                switch(opcion){
+                    case 1:
+                        cambioaDolar(cantidad);
+                        break;
+                    case 2:
+                        cambioaEuro(cantidad);
+                        break;
+                    default:
+                        alert("La opcion introducida no es valida");
+                }
+            }
+
+
+            function cambioaEuro(cantidad){
+                //cambia la moneda de dolar a euro
+                let cambio=cantidad/valorEuro;
+                cambio=cambio.toFixed(2);
+                alert(cantidad+"$ = "+cambio+"€");
+
+            }
+
+            function cambioaDolar(cantidad){
+                //cambia la moneda de euros a dolar
+                let cambio=cantidad*valorDolar;
+                cambio=cambio.toFixed(2);
+                alert(cantidad+"€ = "+cambio+"$");
+            }
+
+
+            function mostrarTipo(){
+                //muestra las equivalencias de una moneda a otra
+                alert("1€ equivale a "+valorDolar+"$"+
+                        "\n1$ equivale a "+valorEuro+"€");
+            }
+
+
+            function cambiarTipo(){
+                //es una funcion para cambiar el valor de la moneda
+                //tiene un menu para que puedas seleccionar que moneda deseas cambiar
+                let opcion=prompt("Que tipo deseas cambiar: \n"+
+                    "1. Valor de dolar a euro\n"+
+                    "2. Valor de euro a dolar");
+                opcion=parseInt(opcion);
+
+                switch(opcion){
+                    case 1:
+                        cambioTipoDolar();
+                        break;
+                    case 2:
+                        cambioTipoEuro();
+                        break;
+                    default:
+                        alert("Opcion no valida");
+                }
+            }
+
+            function cambioTipoDolar(){
+                //funcion para cambiar el valor de la moneda pidiendosela al usuario
+                let nuevoValorDolar=prompt("Cual es el nuevo valor del dolar en relacion al euro");
+                nuevoValorDolar=parseFloat(nuevoValorDolar);
+                valorDolar=nuevoValorDolar.toFixed(2);
+                alert("El nuevo valor es \n1€ = "+valorDolar+"$");
+            }
+
+            function cambioTipoEuro(){
+                //funcion para cambiar el valor de la moneda pidiendosela al usuario
+                let nuevoValorEuro=prompt("Cual es el nuevo valor del euro en relacion al dolar");
+                nuevoValorEuro=parseFloat(nuevoValorEuro);
+                valorEuro=nuevoValorEuro.toFixed(2);
+                valorEuro.toFixed(2);
+                alert("El nuevo valor es \n1$ = "+valorEuro+"€");
+            }
+
+
+            //esto es el "main" del ejercicio donde se llaman a las funciones para que se ejecuten
+            //hago un bucle para con la condicion que la respuesta si es distinta de 4 sea volver a preguntar
+            //si la respuesta es 4 el programa termina
+
+            do{
+                var opcion=prompt("MENU\n"+"1. Mostrar tipo de cambio actual\n"+
+                "2. Convertir cantidades entre dos monedas"+"\n3. Actualizar el tipo de cambio"+"\n4. Salir");
+                opcion=parseInt(opcion);
+
+                switch (opcion){
+                    case 1:
+                        mostrarTipo();
+                        break;
+                    case 2:
+                        cambio();
+                        break;
+                    case 3:
+                        cambiarTipo();
+                        break;
+                    case 4:
+                        alert("Saliendo . . .");
+                        break;
+                    default:
+                        alert("La opcion introducida no es valida");
+                }
+            }while(opcion!=4);
+            
+        </script>
+    </body>
+</html>
