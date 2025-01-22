@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+
+    <body>
+        <script>
+            var nombre;
+            var edad;
+            var numeroSuerte;
+
+            function nombre(){
+                nombre=prompt("Introduce tu nombre");
+                nombre=String(nombre);
+            }
+
+            function edad(){
+                edad=prompt("Introduce tu edad");
+                edad=Number(edad);
+            }
+
+            function calcularEdad(edad,nombre,numeroSuerte){
+                let añoActual = new Date().getFullYear();
+                let añoNacimiento = añoActual - edad;
+                alert("El año de nacimiento de "+nombre+" es el "+añoNacimiento+" y tu numero de la sueste es "+numeroSuerte);
+            }
+
+            function numeroSuerte(){
+                numeroSuerte= Math.floor(Math.random() * 100) + 1; 
+                numeroSuerte=Number(numeroSuerte);
+            }
+
+            console.log();
+            nombre();
+            edad();
+            numeroSuerte();
+            calcularEdad(edad,nombre,numeroSuerte);
+
+            
+        </script>
+    </body>
+</html>
