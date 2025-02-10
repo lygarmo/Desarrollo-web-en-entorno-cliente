@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Menu de profesor</title>
+        <link rel='stylesheet' type='text/css' media='screen' href='estiloMenu.css'>
+        <script>
+            window.onload = function() {
+                verificarSesion();
+            };
+
+            function verificarSesion() {
+                var usuario = sessionStorage.getItem('usuario');
+                if (!usuario) {
+                    alert('Debe iniciar sesión primero');
+                    window.location.href = 'login.html'; //Redirigir al login si no hay sesión
+                } else {
+                    //Muestrar el nombre de usuario en la página
+                    document.getElementById("bienvenido").textContent = "Bienvenido, " + usuario;
+                }
+            }
+
+            //Cerrar la sesión
+            function cerrarSesion() {
+                sessionStorage.removeItem('usuario'); //Eliminar la sesión
+                window.location.href = 'login.html'; //Redirigir al login
+            }
+        </script>
+    </head>
+    <body>
+        <header>
+            <h2 id="bienvenido">...</h2>
+            <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+        </header>
+        <h1>Menu de profesor</h1>
+        <a href="infoProfesor.html">Añadir profesor</a><br>
+        <a href="editarProfe.html">Editar profesor</a><br>
+    </body>
+</html>

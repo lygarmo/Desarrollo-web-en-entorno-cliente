@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Editar empresa</title>
+        <link rel='stylesheet' type='text/css' media='screen' href='estilos.css'>
+        <script>
+            window.onload = function () {
+                verificarSesion();
+                cargarDesplegableEmpresas();
+                document.getElementById("seleccionarBtn").addEventListener("click", mostrarFormulario);
+                document.getElementById("eliminarBtn").addEventListener("click", eliminarEmpresa);
+            };
+
+            function verificarSesion() {
+                var usuario = sessionStorage.getItem('usuario');
+                if (!usuario) {
+                    alert('Debe iniciar sesión primero');
+                    window.location.href = 'login.html';
+                } else {
+                    document.getElementById("bienvenido").textContent = "Bienvenido, " + usuario;
+                }
+            }
+
+            function cerrarSesion() {
+                sessionStorage.removeItem('usuario');
+                window.location.href = 'login.html';
+            }
+
+            /*-----------------SCRPT--------------*/
+
+            function Empresa(id, nombre, razon, tipo, identificacion, email, telefono, direccion, ciudad,
+                    codigo, fechaConstitucion,sector, empleados, web, representante, estado, fechaAlta, notas) {
+                this.id = id;
+                this.nombre = nombre;
+                this.razon = razon;
+                this.tipo = tipo;
+                this.identificacion = identificacion;
+                this.email = email;
+                this.telefono = telefono;
+                this.direccion = direccion;
+                this.ciudad = ciudad;
+                this.codigo = codigo;
+                this.fechaConstitucion = fechaConstitucion;
+                this.sector = sector;
+                this.empleados = empleados;
+                this.web = web;
+                this.representante = representante;
+                this.estado = estado;
+                this.fechaAlta = fechaAlta;
+                this.notas = notas;
+            }
+
+            var empresas=[
+                new Empresa(1, 'Tech Solutions', 'Tecnologia', 'limitada', '2020F', 'contacto@techsolutions.com', '(+34) 912345678', 'Calle Tecnología 45', 'Madrid',
+                    28300, '2024-09-12','tecnologia', 214, 'https://techsolutions.es/', 'Carlos', 'activa', '2024-10-02')
+            ];
+
+            function cargarDesplegableEmpresas() {
+            var empresaSelect = document.getElementById("empresaSelect");
+            empresaSelect.innerHTML = '<option value="">-- Selecciona una empresa --</option>';
+            empresas.forEach(empresa => {
+                let option = document.createElement("option");
+                option.value = empresa.id;
+                option.textContent = empresa.nombre;
+                empresaSelect.appendChild(option);
+            });
+        }
+
+
+            function mostrarFormulario(){
+                let select=document.getElementById("empresaSelect");
+                let empresaId=select.value;
+                if(!empresaId){
+                    alert("Seleccione una empresa");
+                    return;
+                }
+
+                let empresa=empresas.find(a => a.id == empresaId);
+                if(empresa){
+                    document.getElementById("id").value = empresa.id;
+                    document.getElementById("nombre").value = empresa.nombre;
+                    document.getElementById("razon").value = empresa.razon;
+                    document.getElementById("tipo").value = empresa.tipo;
+                    document.getElementById("identificacion").value = empresa.identificacion;
+                    document.getElementById("email").value = empresa.email;
+                    document.getElementById("telefono").value = empresa.telefono;
+                    document.getElementById("direccion").value = empresa.direccion;
+                    document.getElementById("ciudad").value = empresa.ciudad;
+                    document.getElementById("codigo").value = empresa.codigo;
+                    document.getElementById("fechaConstitucion").value = empresa.fechaConstitucion;
+                    document.getElementById("sector").value = empresa.sector;
+                    document.getElementById("empleados").value = empresa.empleados;
+                    document.getElementById("web").value = empresa.web;
+                    document.getElementById("representante").value = empresa.representante;
+                    document.getElementById("estado").value = empresa.estado;
+                    document.getElementById("fechaAlta").value = empresa.fechaAlta;
+                    document.getElementById("notas").value = empresa.notas;
+                    
+                    // Cargar valores en los desplegables
+                    setDesplegableValue("tipo", empresa.tipo);
+                    setDesplegableValue("sector", empresa.sector);
+                    setDesplegableValue("estado", empresa.estado);
+
+                    document.getElementById("formulario").style.display = "block";
+                }
+            }
+
+            function setDesplegableValue(id, valor){
+                let select = document.getElementById(id);
+                let options = select.getElementsByTagName("option");
+                for (let option of options) {
+                    if (option.value === valor) {
+                        option.selected = true;
+                        break;
+                    }
+                }
+            }
+
+            function guardarCambios(event) {
+                event.preventDefault(); // Evitar el envío del formulario
+                var mensajeExito = document.getElementById("mensajeExito");
+
+                mensajeExito.textContent = "\nLos cambios se han realizado con éxito";
+                mensajeExito.style.display = "block"; // Hacer visible el mensaje de éxito
+
+                formulario.style.display = "none"; // Esconder el formulario
+                desplegable.style.display = "block"; // Mostrar el desplegable
+            }
+
+            function eliminarEmpresa() {
+                let select = document.getElementById("empresaSelect");
+                let empresaId = select.value;
+                if (!empresaId) {
+                    alert("Seleccione una empresa");
+                    return;
+                }
+                // Eliminar el alumno del array
+                empresas = empresas.filter(a => a.id != empresaId);
+                
+                // Recargar el desplegable
+                cargarDesplegableEmpresas();
+
+                // Mostrar mensaje de éxito
+                alert("Empresa eliminado con éxito");
+
+                // Esconder el formulario
+                document.getElementById("formulario").style.display = "none";
+            }
+        </script>
+    </head>
+
+
+    <body>
+        <header>
+            <h2 id="bienvenido">...</h2>
+            <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+        </header>
+
+        <div class="desplegable">
+            <h3>Seleccionar la empresa</h3>
+            Selecciona una empresa:
+            <select id="empresaSelect">
+                <option value="">-- Selecciona una empresa --</option>
+            </select>
+            <br><input type="button" id="seleccionarBtn" value="Seleccionar"><br><br>
+            <input type="button" id="eliminarBtn" value="Eliminar empresa">
+        </div>
+        
+        <div id="formulario" style="display: none;">
+            <h1>Información de la empresa</h1>
+            <p>* son obligatorios</p>
+            <form onsubmit="guardarCambios(event)">
+                Numero de identificacion * <input type="number" id="id" placeholder="1234..." required><br><br>
+                Nombre de la empresa * <input type="text" id="nombre" required><br><br>
+                Razon social <input type="text" id="razon"><br><br>
+                Tipo de empresa
+                <select id="tipo">
+                    <option value="" disabled selected> </option>
+                    <option value="anonima">Sociedad Anónima</option>
+                    <option value="limitada">Sociedad Limitada</option>
+                    <option value="autonomo">Autónomo</option>
+                </select><br><br>
+                Número de Identificación Fiscal (NIF/CIF) * <input type="text" id="identificacion" required><br><br>
+                Correo electrónico * <input type="text" id="email" required><br><br>
+                Numero de teléfono <input type="text" id="telefono" placeholder="(+xx) xxxxxxxxx"><br><br>
+                Dirección * <input type="text" id="direccion" required><br><br>
+                Ciudad * <input type="text" id="ciudad" required><br><br>
+                Código postal * <input type="text" id="codigo" required><br><br>
+                Fecha de constitución * <input type="date" id="fechaConstitucion" required><br><br>
+                Sector o industria
+                <select id="sector">
+                    <option value="" disabled selected> </option>
+                    <option value="tecnologia">Tecnología</option>
+                    <option value="salud">Salud</option>
+                    <option value="educacion">Educación</option>
+                </select><br><br>
+                Número de empleados <input type="number" id="empleados"><br><br>
+                Sitio web <input type="text" id="web" placeholder="https://ejemplo.com"><br><br>
+                Logo empresa <input type="file" id="logo" accept=".png, .jpg"><br><br>
+                Representante legal <input type="text" id="representante"><br><br>
+                Estado de la empresa *
+                <select id="estado" required>
+                    <option value="" disabled selected> </option>
+                    <option value="activa">Activa</option>
+                    <option value="inactiva">Inactiva</option>
+                    <option value="liquidacion">En liquidación</option>
+                </select><br><br>
+                Fecha de alta <input type="date" id="fechaAlta"><br><br>
+                Notas adicionales <textarea id="notas"></textarea><br><br>
+
+                <br><input type="submit" value="Añadir informacion">
+            </form>
+        </div>
+
+        <div id="mensajeExito" style="display: flex; color: green;"></div>
+        <button id="volver" onclick="window.location.href='menuProfe.html'">Volver</button>
+    </body>
+</html>

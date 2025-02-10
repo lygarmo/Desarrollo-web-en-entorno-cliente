@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset='utf-8'>
+        <title>Informacion profesor</title>
+        <link rel="stylesheet" href="estilos.css">
+        <script>
+            window.onload = function() {
+                verificarSesion();
+            };
+
+            function verificarSesion() {
+                var usuario = sessionStorage.getItem('usuario');
+                if (!usuario) {
+                    alert('Debe iniciar sesión primero');
+                    window.location.href = 'login.html'; //Redirigir al login si no hay sesión
+                } else {
+                    //Muestrar el nombre de usuario en la página
+                    document.getElementById("bienvenido").textContent = "Bienvenido, " + usuario;
+                }
+            }
+
+            //Cerrar la sesión
+            function cerrarSesion() {
+                sessionStorage.removeItem('usuario'); //Eliminar la sesión
+                window.location.href = 'login.html'; //Redirigir al login
+            }
+
+
+            function validarFormulario() {
+                var nombre = document.getElementById("nombre").value;
+                var id = document.getElementById("id").value;
+                var email = document.getElementById("email").value;
+                var telefono = document.getElementById("telefono").value;
+                var direccion = document.getElementById("direccion").value;
+                var fechaNacimiento = document.getElementById("fechaNacimiento").value;
+                var genero = document.getElementById("genero").value;
+                var rol = document.getElementById("rol").value;
+                var area = document.getElementById("area").value;
+                var contrato = document.getElementById("contrato").value;
+                var fechaIngreso = document.getElementById("fechaIngreso").value;
+                var estado = document.getElementById("estado").value;
+                var foto = document.getElementById("foto").files[0];
+                var notas = document.getElementById("notas").value;
+                var password = document.getElementById("password").value;
+                var passwordConfirmar = document.getElementById("passwordConfirmar").value;
+                var centro = document.getElementById("centro").value;
+
+                //validar contraseña con un patron
+                function validarContraseña(password, passwordConfirmar) {
+                    let patron = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                    if (!patron.test(password)) {
+                        alert("La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.");
+                        return false;
+                    }
+
+                    if (password !== passwordConfirmar) {
+                        alert("Las contraseñas no coinciden.");
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                //validar el email con un patron xx@xx.xx
+                function validarEmail(email) {
+                    let patron = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!patron.test(email)) {
+                        alert("El correo debe tener el formato: xx@xx.xx");
+                        return false;
+                    }
+                    return true;
+                }
+
+                //valid que el nombre solo pueda contener letras
+                function validarNombre(nombre) {
+                    let patron = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
+                    if (!patron.test(nombre) || nombre.length >50) {
+                        alert("Nombre incorrecto");
+                        return false;
+                    }
+                    return true;
+                }
+
+                function validarTelefono(telefono){
+                    let patron = /^\(\+\d{1,3}\)\s\d{9}$/;
+                    if (telefono && !patron.test(telefono)) {
+                        alert("El teléfono debe tener el formato: (+xx) xxxxxxxxx");
+                        return false;
+                    }
+                    return true;
+                }
+
+                if(validarEmail(email) && validarTelefono(telefono) &&
+                    validarNombre(nombre)){
+                    return true;
+                }
+                guardarCambios(event);
+            }
+
+            function guardarCambios(event) {
+                event.preventDefault(); // Evitar el envío del formulario
+                var mensajeExito = document.getElementById("mensajeExito");
+
+                mensajeExito.textContent = "\nProfesor añadido con exito";
+                mensajeExito.style.display = "block"; // Hacer visible el mensaje de éxito
+            }
+        </script>
+    </head>
+
+
+    <body>
+        <header>
+            <h2 id="bienvenido">...</h2>
+            <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+        </header>
+        <h1>Información profesor</h1>
+        <div id="formulario">
+            <p>* son obligatorios</p>
+            <form onsubmit="return validarFormulario();">
+                Nombre completo * <input type="text" id="nombre" required><br><br>
+                Numero de identificacion * <input type="number" id="id" placeholder="1234..." required><br><br>
+                Correo electrónico * <input type="text" id="email" required><br><br>
+                Numero de teléfono <input type="text" id="telefono" placeholder="(+xx) xxxxxxxxx"><br><br>
+                Direccion * <input type="text" id="direccion" required><br><br>
+                Fecha de nacimiento <input type="date" id="fechaNacimiento"><br><br>
+                Género
+                <select id="genero">
+                    <option value="" disabled selected> </option>
+                    <option value="masculino">Masculino</option>
+                    <option value="femenino">Femenino</option>
+                    <option value="otro">Otro</option>
+                    <option value="noDecirlo">Prefiero no decirlo</option>
+                </select><br><br>
+                Rol *
+                <select id="rol" required>
+                    <option value="" disabled selected> </option>
+                    <option value="profesor">Profesor</option>
+                    <option value="coordinador">Coordinador</option>
+                    <option value="jefeDepartamento">Jefe de departamento</option>
+                    <option value="tutor">Tutor</option>
+                    <option value="practicas">Profesor en prácticas</option>
+                </select><br><br>
+                Departamento o área de especialización
+                <select id="area">
+                    <option value="" disabled selected> </option>
+                    <option value="informatica">Informática</option>
+                    <option value="matematicas">Matemáticas</option>
+                    <option value="lengua">Lengua castella</option>
+                    <option value="ingles">Inglés</option>
+                    <option value="historia">Historia</option>
+                </select><br><br>
+                Tipo de contrato
+                <select id="contrato">
+                    <option value="" disabled selected> </option>
+                    <option value="completo">A tiempo completo</option>
+                    <option value="parcial">Parcial</option>
+                    <option value="sustituto">Sustitución</option>
+                    <option value="practicas">Prácticas</option>
+                </select><br><br>
+                Fecha de ingreso <input type="date" id="fechaIngreso"><br><br>
+                Estado del profesor *
+                <select id="estado" required>
+                    <option value="" disabled selected> </option>
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                    <option value="licencia">En licencia</option>
+                </select><br><br>
+                Foto de perfil <input type="file" id="foto"><br><br>
+                Notas adicionales <textarea id="notas"></textarea><br><br>
+                Contraseña para el profesor * <input type="password" id="password" required><br><br>
+                Confirmar contraseña * <input type="password" id="passwordConfirmar" required><br><br>
+                Centro *
+                <select id="centro" required>
+                    <option value="" disabled selected> </option>
+                    <option value="scarlatti">IES Domenico Scarlatti</option>
+                    <option value="rusiñol">IES Santiago Rusiñol</option>
+                    <option value="alpajes">IES Alpajés</option>
+                    <option value="loyola">Salesianos Loyola</option>
+                </select><br><br>
+
+                <br><input type="submit" value="Añadir informacion">
+            </form>
+            <br><br><a href="menuAdmin.html">Volver</a>
+        </div>
+    </body>
+</html>

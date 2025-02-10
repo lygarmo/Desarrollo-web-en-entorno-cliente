@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Realizacion convenio</title>
+        <link rel='stylesheet' type='text/css' media='screen' href='estilos.css'>
+        <script>
+            window.onload = function () {
+                verificarSesion();
+                cargarDesplegableAlumnos();
+                document.getElementById("formularioAlumno").addEventListener("submit", function (event) {
+                    event.preventDefault(); // Evita que el formulario se envíe al seleccionar un alumno
+                    mostrarEstados();
+                });
+
+                document.getElementById("mensaje").addEventListener("click", function(event) {
+                    // Muestra el mensaje en la pantalla
+                    event.preventDefault();
+                    document.getElementById("mensajeConfirmacion").textContent = "Convenio realizado";
+                    document.getElementById("mensajeConfirmacion").style.display = "block";
+
+                    document.getElementById("formulario").style.display = "none";
+                    document.getElementById("formularioAlumno").style.display = "none";
+                });
+            };
+
+            function verificarSesion() {
+                var usuario = sessionStorage.getItem('usuario');
+                if (!usuario) {
+                    alert('Debe iniciar sesión primero');
+                    window.location.href = 'login.html';
+                } else {
+                    document.getElementById("bienvenido").textContent = "Bienvenido, " + usuario;
+                }
+            }
+
+            function cerrarSesion() {
+                sessionStorage.removeItem('usuario');
+                window.location.href = 'login.html';
+            }
+
+            /*---------------SCRIPT-----------------*/
+
+
+            function Alumno(id, nombre, fechaNacimiento, genero, email, telefono, direccion,
+                centro, curso, tutor, estado, fechaInscripcion, promedio, comentarios) {
+                this.id = id;
+                this.nombre = nombre;
+                this.fechaNacimiento = fechaNacimiento;
+                this.genero = genero;
+                this.email = email;
+                this.telefono = telefono;
+                this.direccion = direccion;
+                this.centro = centro;
+                this.curso = curso;
+                this.tutor = tutor;
+                this.estado = estado;
+                this.fechaInscripcion = fechaInscripcion;
+                this.promedio = promedio;
+                this.comentarios = comentarios;
+            }
+
+            var alumnos = [
+                new Alumno(1, 'Lydia Garcia Molina', '2000-02-08', 'femenino', 'lydia@example.com', '(+34) 666666', 'Calle primavera, n34', 'scarlatti',
+                    '2daw', 'carmen', 'promociona', '2024-09-05', 7, 'Buen rendimiento'),
+                new Alumno(2, "Juan Pérez", "2000-05-10", "masculino", "juan@example.com", "(+34) 600123456", "Calle Falsa 123", "scarlatti",
+                    "2daw", "carmen", "promociona", "2023-09-01", 8, "Buen rendimiento."),
+                new Alumno(3, "María López", "2001-08-22", "femenino", "maria@example.com", "(+34) 611234567", "Avenida Real 456", "rusiñol",
+                    "1dam", "goyo", "graduado", "2022-09-01", 9, "Excelente alumna."),
+                new Alumno(4, "Carlos Gómez", "1999-12-15", "masculino", "carlos@example.com", "(+34) 622345678", "Plaza Mayor 789", "alpajés",
+                    "2dam", "alejandro", "no_promociona", "2024-09-01", 5, "Debe mejorar en prácticas.")
+            ];
+
+            function cargarDesplegableAlumnos() {
+                const selectAlumno = document.getElementById("alumno");
+                alumnos.forEach(alumno => {
+                    const option = document.createElement("option");
+                    option.value = alumno.id;
+                    option.textContent = alumno.nombre;
+                    selectAlumno.appendChild(option);
+                });
+            }
+
+            function mostrarEstados() {
+                const selectAlumno = document.getElementById("alumno").value;
+                const formularioConvenio = document.getElementById("formulario");
+
+                if (selectAlumno) {
+                    formularioConvenio.style.display = "block";
+                } else {
+                    formularioConvenio.style.display = "none";
+                }
+            }
+        </script>
+    </head>
+
+    <body>
+        <header>
+            <h2 id="bienvenido">...</h2>
+            <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+        </header>
+        <h1>Realización de convenio</h1>
+        <form id="formularioAlumno">
+            Seleccionar alumno
+            <select id="alumno" required>
+                <option value="" disabled selected>Seleccione un alumno</option>
+            </select><br><br>
+
+            <input type="submit" value="Seleccionar alumno">
+        </form>
+
+        <div id="formulario" style="display: none;">
+            <form>
+                Nombre de la empresa <input type="text" id="nombreEmpresa"><br>
+                CIF empresa <input type="text" id="cif"><br>
+                Dirección de la empresa <input type="text" id="direccion"><br>
+                Tipo de entidad
+                <select id="entidad">
+                    <option value="" disabled selected> </option>
+                    <option value="sa">SA</option>
+                    <option value="sl">SL</option>
+                    <option value="slu">SLU</option>
+                </select><br><br>
+                Nombre del representante <input type="text" id="nombreRepresentante"><br>
+                DNI del representante <input type="text" id="dni"><br>
+                Cargo en la empresa del representante <input type="text" id="cargo"><br><br>
+                Persona de contacto <input type="text" id="personaContacto"><br>
+                Mail de contacto <input type="text" id="email"><br>
+                Teléfono de contacto <input type="text" id="telefono"><br><br>
+                Firma digital <input type="text" id="firma"><br>
+                Estado 
+                <select id="estado">
+                    <option value="" disabled selected> </option>
+                    <option value="pendienteRealizacion">Pendiente realización de convenio</option>
+                    <option value="envioEmpresa">Pendiente envío empresa</option>
+                    <option value="firmaEmpresa">Pendiente firma de empresa</option>
+                    <option value="firmaDirector">Pendiente firma director</option>
+                    <option value="firmaComunidad">Pendiente firma Comunidad</option>
+                    <option value="EnviadoEmpresa">Enviado a empresa</option>
+                </select><br><br>
+
+                <input type="submit" value="Guardar convenio" id="mensaje">
+            </form>
+        </div>
+        <div id="mensajeConfirmacion" style="display: none;"></div>
+        <button id="volver" onclick="window.location.href='menuTutor.html'">Volver</button>
+    </body>
+</html>

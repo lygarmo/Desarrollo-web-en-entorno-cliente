@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Asignacion de empresa</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='estilos.css'>
+    <script>
+        window.onload = function () {
+            verificarSesion();
+            cargarDesplegableAlumnos(); // Llenar el desplegable con alumnos
+            document.getElementById("formularioEstado").addEventListener("submit", seleccionarAlumno); // Añadir el evento submit al formulario
+        };
+
+        function verificarSesion() {
+            var usuario = sessionStorage.getItem('usuario');
+            if (!usuario) {
+                alert('Debe iniciar sesión primero');
+                window.location.href = 'login.html';
+            } else {
+                document.getElementById("bienvenido").textContent = "Bienvenido, " + usuario;
+            }
+        }
+
+        function cerrarSesion() {
+            sessionStorage.removeItem('usuario');
+            window.location.href = 'login.html';
+        }
+
+        /*---------------SCRIPT-----------------*/
+
+        function Alumno(id, nombre, fechaNacimiento, genero, email, telefono, direccion,
+            centro, curso, tutor, estado, fechaInscripcion, promedio, comentarios) {
+            this.id = id;
+            this.nombre = nombre;
+            this.fechaNacimiento = fechaNacimiento;
+            this.genero = genero;
+            this.email = email;
+            this.telefono = telefono;
+            this.direccion = direccion;
+            this.centro = centro;
+            this.curso = curso;
+            this.tutor = tutor;
+            this.estado = estado;
+            this.fechaInscripcion = fechaInscripcion;
+            this.promedio = promedio;
+            this.comentarios = comentarios;
+        }
+
+        var alumnos = [
+            new Alumno(1, 'Lydia Garcia Molina', '2000-02-08', 'femenino', 'lydia@example.com', '(+34) 666666', 'Calle primavera, n34', 'scarlatti',
+                '2daw', 'carmen', 'promociona', '2024-09-05', 7, 'Buen rendimiento'),
+            new Alumno(2, "Juan Pérez", "2000-05-10", "masculino", "juan@example.com", "(+34) 600123456", "Calle Falsa 123", "scarlatti",
+                "2daw", "carmen", "promociona", "2023-09-01", 8, "Buen rendimiento."),
+            new Alumno(3, "María López", "2001-08-22", "femenino", "maria@example.com", "(+34) 611234567", "Avenida Real 456", "rusiñol",
+                "1dam", "goyo", "graduado", "2022-09-01", 9, "Excelente alumna."),
+            new Alumno(4, "Carlos Gómez", "1999-12-15", "masculino", "carlos@example.com", "(+34) 622345678", "Plaza Mayor 789", "alpajés",
+                "2dam", "alejandro", "no_promociona", "2024-09-01", 5, "Debe mejorar en prácticas.")
+        ];
+
+        function cargarDesplegableAlumnos() {
+            const selectAlumno = document.getElementById("alumno");
+            alumnos.forEach(alumno => {
+                const option = document.createElement("option");
+                option.value = alumno.id;
+                option.textContent = alumno.nombre;
+                selectAlumno.appendChild(option);
+            });
+        }
+
+        function seleccionarAlumno(event) {
+            event.preventDefault(); // Evitar el envío del formulario
+            const selectAlumno = document.getElementById("alumno");
+            const idAlumno = selectAlumno.value;
+
+            // Mostrar el formulario de la empresa solo si se ha seleccionado un alumno
+            if (idAlumno) {
+                mostrarFormularioEmpresa(idAlumno);
+            }
+        }
+
+        function mostrarFormularioEmpresa(idAlumno) {
+            // Muestra el formulario de la empresa
+            document.getElementById("formularioEstado").style.display = "none"; // Esconde el formulario de selección de alumno
+            document.getElementById("formularioEmpresa").style.display = "block"; // Muestra el formulario de empresa
+        }
+
+        function guardarCambios(event) {
+            event.preventDefault(); // Evitar el envío del formulario
+            var mensajeExito = document.getElementById("mensajeExito");
+
+            mensajeExito.textContent = "Asignación completada con éxito"; // Mensaje de éxito
+            mensajeExito.style.display = "block"; // Hacer visible el mensaje de éxito
+
+            // Esconder el formulario y mostrar el mensaje
+            document.getElementById("formularioEmpresa").style.display = "none";
+            document.getElementById("mensajeExito").style.display = "block";
+        }
+
+    </script>
+</head>
+
+<body>
+    <header>
+        <h2 id="bienvenido">...</h2>
+        <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+    </header>
+    <h1>Asignar empresa</h1>
+
+    <div id="formularioEstado">
+        <form id="formulario" onsubmit="seleccionarAlumno(event)">
+            Seleccionar alumno
+            <select id="alumno" required>
+                <option value="" disabled selected>Seleccione un alumno</option>
+            </select><br><br>
+
+            <input type="submit" value="Seleccionar">
+        </form>
+    </div>
+
+    <div id="formularioEmpresa" style="display: none;">
+        <form id="formulario" onsubmit="guardarCambios(event)">
+            Empresa <input type="text" id="nombreEmpresa"><br>
+            Fecha inicio <input type="date" id="fechaInicio"><br>
+            Fecha fin <input type="date" id="fechaFin"><br>
+            Horario <input type="text" id="horario"><br>
+            Nº de horas <input type="number" id="horas"><br>
+            Modalidad
+            <select id="modalidad">
+                <option value="" disabled selected> </option>
+                <option value="presencial">Presencial</option>
+                <option value="teletrabajo">teletrabajo</option>
+            </select>
+            <br><br><input type="submit" value="Guardar">
+        </form>
+    </div>
+
+    <div id="mensajeExito" style="display: none; color: green; font-weight: bold;">Asignación completada con éxito</div>
+
+    <button id="volver" onclick="window.location.href='menuTutor.html'">Volver</button>
+</body>
+</html>

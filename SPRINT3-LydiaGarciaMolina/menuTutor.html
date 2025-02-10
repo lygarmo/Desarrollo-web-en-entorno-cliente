@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Menu tutor</title>
+        <link rel="stylesheet" href="estiloMenu.css">
+        <style>
+            body{
+                text-align: center;
+            }
+        </style>
+        <script>
+             window.onload = function() {
+                verificarSesion();
+            };
+
+            function verificarSesion() {
+                var usuario = sessionStorage.getItem('usuario');
+                if (!usuario) {
+                    alert('Debe iniciar sesión primero');
+                    window.location.href = 'login.html'; //Redirigir al login si no hay sesión
+                } else {
+                    //Muestrar el nombre de usuario en la página
+                    document.getElementById("bienvenido").textContent = "Bienvenido, " + usuario;
+                }
+            }
+
+            //Cerrar la sesión
+            function cerrarSesion() {
+                sessionStorage.removeItem('usuario'); //Eliminar la sesión
+                window.location.href = 'login.html'; //Redirigir al login
+            }
+        </script>
+    </head>
+
+    <body>
+        <header>
+            <h2 id="bienvenido">...</h2>
+            <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+        </header>
+        <h1>Menu de tutor</h1>
+        <a href="infoEmpresas.html">Almacenar informacion de empresas</a><br>
+        <a href="contactoEmpresas.html">Almacenar informacion de contacto de empresas</a><br>
+        <a href="asignarFCT.html">Asignar alumnos a la fase de FCT</a><br>
+        <a href="asignarEstadoPracticas.html">Asignar estados a las practicas de los alumnos</a><br>
+        <a href="asignarEmpresa.html">Asignar empresa</a><br>
+        <a href="realizarConvenido.html">Realizacion de convenio</a><br>
+        <a href="relacionAlumnos.html">Fase de relacion de alumnos</a><br>
+        <a href="fasePrograma.html">Fase de programa y horario</a><br><br>
+    </body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Asignar FCT</title>
+        <link rel='stylesheet' type='text/css' media='screen' href='estilos.css'>
+        <script>
+            window.onload = function () {
+                verificarSesion();
+                cargarDesplegableAlumnos(); // Llenar el desplegable con alumnos
+                document.getElementById("seleccionarBtn").addEventListener("click", mostrarFormulario);
+            };
+
+            function verificarSesion() {
+                var usuario = sessionStorage.getItem('usuario');
+                if (!usuario) {
+                    alert('Debe iniciar sesión primero');
+                    window.location.href = 'login.html';
+                } else {
+                    document.getElementById("bienvenido").textContent = "Bienvenido, " + usuario;
+                }
+            }
+
+            function cerrarSesion() {
+                sessionStorage.removeItem('usuario');
+                window.location.href = 'login.html';
+            }
+
+
+            /*---------------SCRIPT-----------------*/
+
+
+            function Alumno(id, nombre, fechaNacimiento, genero, email, telefono, direccion,
+                centro, curso, tutor, estado, fechaInscripcion, promedio, comentarios) {
+                this.id = id;
+                this.nombre = nombre;
+                this.fechaNacimiento = fechaNacimiento;
+                this.genero = genero;
+                this.email = email;
+                this.telefono = telefono;
+                this.direccion = direccion;
+                this.centro = centro;
+                this.curso = curso;
+                this.tutor = tutor;
+                this.estado = estado;
+                this.fechaInscripcion = fechaInscripcion;
+                this.promedio = promedio;
+                this.comentarios = comentarios;
+            }
+
+            var alumnos = [
+                new Alumno(1, 'Lydia Garcia Molina', '2000-02-08', 'femenino', 'lydia@example.com', '(+34) 666666', 'Calle primavera, n34', 'scarlatti',
+                    '1daw', 'carmen', 'promociona', '2024-09-05', 7, 'Buen redimiento'),
+                new Alumno(2, "Juan Pérez", "2000-05-10", "masculino", "juan@example.com", "(+34) 600123456", "Calle Falsa 123", "scarlatti",
+                    "2daw", "carmen", "promociona", "2023-09-01", 8, "Buen rendimiento."),
+                new Alumno(3, "María López", "2001-08-22", "femenino", "maria@example.com", "(+34) 611234567", "Avenida Real 456", "rusiñol",
+                    "2daw", "goyo", "graduado", "2022-09-01", 9, "Excelente alumna."),
+                new Alumno(4, "Carlos Gómez", "1999-12-15", "masculino", "carlos@example.com", "(+34) 622345678", "Plaza Mayor 789", "alpajés",
+                    "2dam", "alejandro", "no_promociona", "2024-09-01", 5, "Debe mejorar en prácticas.")
+            ];
+
+            function mostrarAlumnosPorCurso() {
+                event.preventDefault();
+                let cursoSeleccionado = document.getElementById("curso").value;
+                let tabla = document.getElementById("tablaAlumnos");
+                let tbody = document.getElementById("tbodyAlumnos");
+                
+                // Limpiar la tabla antes de agregar los nuevos datos
+                tbody.innerHTML = "";
+
+                // Filtrar alumnos por curso
+                let alumnosFiltrados = alumnos.filter(alumno => alumno.curso === cursoSeleccionado);
+
+                // Si no hay alumnos, mostrar mensaje
+                if (alumnosFiltrados.length === 0) {
+                    tbody.innerHTML = "<tr><td colspan='4'>No hay alumnos en este curso.</td></tr>";
+                    return;
+                }
+
+                // Agregar alumnos a la tabla
+                alumnosFiltrados.forEach(alumno => {
+                    let fila = `<tr>
+                        <td>${alumno.id}</td>
+                        <td>${alumno.nombre}</td>
+                        <td>${alumno.email}</td>
+                        <td>${alumno.estado}</td>
+                        <td>Pendiente de asignacion de practicas</td>
+                    </tr>`;
+                    // esta expresion agrega (o concatena) contenido HTML dentro del elemento tbody
+                    tbody.innerHTML += fila;
+                });
+
+                // Mostrar la tabla si estaba oculta
+                tabla.style.display = "table";
+            }
+        </script>
+    </head>
+
+
+    <body>
+        <header>
+            <h2 id="bienvenido">...</h2>
+            <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+        </header>
+        <h1>Seleccion del curso</h1>
+        <div id="formulario">
+            <form onsubmit="mostrarAlumnosPorCurso(event)">
+                Curso 
+                <select id="curso" required>
+                    <option value="" disabled selected> </option>
+                    <option value="1daw">1 DAW</option>
+                    <option value="2daw">2 DAW</option>
+                    <option value="1dam">1 DAM</option>
+                    <option value="2dam">2 DAM</option>
+                </select><br><br>
+
+                <br><input type="submit" value="Seleccionar">
+            </form>
+        </div>
+
+        <h2>Alumnos del curso seleccionado</h2>
+        <table id="tablaAlumnos" border="1" style="display:none;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Estado</th>
+                    <th>Nuevo estado</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyAlumnos"></tbody>
+        </table>
+
+        <button id="volver" onclick="window.location.href='menuTutor.html'">Volver</button>
+    </body>
+</html>

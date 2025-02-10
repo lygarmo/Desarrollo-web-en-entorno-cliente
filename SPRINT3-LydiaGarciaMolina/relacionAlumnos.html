@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Relacion alumnos</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='estilos.css'>
+    <script>
+        window.onload = function () {
+            verificarSesion();
+            cargarDesplegableAlumnos(); 
+            document.getElementById("formularioAlumno").addEventListener("submit", seleccionarAlumno);
+            document.getElementById("formulario").addEventListener("submit", guardarCambios);
+        };
+
+        function verificarSesion() {
+            var usuario = sessionStorage.getItem('usuario');
+            if (!usuario) {
+                alert('Debe iniciar sesión primero');
+                window.location.href = 'login.html';
+            } else {
+                document.getElementById("bienvenido").textContent = "Bienvenido, " + usuario;
+            }
+        }
+
+        function cerrarSesion() {
+            sessionStorage.removeItem('usuario');
+            window.location.href = 'login.html';
+        }
+
+        function Alumno(id, nombre) {
+            this.id = id;
+            this.nombre = nombre;
+        }
+
+        var alumnos = [
+            new Alumno(1, 'Lydia Garcia Molina'),
+            new Alumno(2, "Juan Pérez"),
+            new Alumno(3, "María López"),
+            new Alumno(4, "Carlos Gómez")
+        ];
+
+        function cargarDesplegableAlumnos() {
+            const selectAlumno = document.getElementById("alumno");
+            alumnos.forEach(alumno => {
+                const option = document.createElement("option");
+                option.value = alumno.id;
+                option.textContent = alumno.nombre;
+                selectAlumno.appendChild(option);
+            });
+        }
+
+        function seleccionarAlumno(event) {
+            event.preventDefault();
+            const idAlumno = document.getElementById("alumno").value;
+            if (idAlumno) {
+                document.getElementById("formulario").style.display = "block";
+            }
+        }
+
+        function guardarCambios(event) {
+            event.preventDefault();
+            document.getElementById("formulario").style.display = "none";
+            document.getElementById("mensajeExito").textContent = "Asignación completada con éxito";
+            document.getElementById("mensajeExito").style.display = "block";
+        }
+    </script>
+</head>
+
+<body>
+    <header>
+        <h2 id="bienvenido">...</h2>
+        <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+    </header>
+    <h1>Asignar datos a la fase de relación de alumnos</h1>
+
+    <form id="formularioAlumno">
+        <label>Seleccionar alumno:</label>
+        <select id="alumno" required>
+            <option value="" disabled selected>Seleccione un alumno</option>
+        </select>
+        <br><br>
+        <input type="submit" value="Seleccionar alumno">
+    </form>
+
+    <form id="formulario" style="display: none;">
+        Nombre y apellidos del tutor de empresa <input type="text" id="nombre"><br>
+        DNI del tutor de empresa <input type="text" id="dni"><br>
+        Correo electrónico del tutor de empresa <input type="text" id="email"><br>
+        Lugar de realización de prácticas <input type="text" id="direccion"><br>
+        Fecha inicio <input type="date" id="fechaInicio">
+        Fecha fin <input type="date" id="fechaFin"><br>
+        Horario <input type="text" id="horario"><br>
+        Número de horas <input type="number" id="nhoras"><br>
+        Modalidad
+        <select id="modalidad">
+            <option value="" disabled selected></option>
+            <option value="presencial">Presencial</option>
+            <option value="teletrabajo">Teletrabajo</option>
+        </select><br>
+
+        Estado
+        <select id="estado">
+            <option value="" disabled selected></option>
+            <option value="realizacion">Pendiente realización de RELACIÓN</option>
+            <option value="envio">Pendiente envío de empresa</option>
+            <option value="firmaEmpresa">Pendiente firma de empresa</option>
+            <option value="firmaDirector">Pendiente firma director</option>
+            <option value="envioEmpresa">Pendiente envío empresa</option>
+            <option value="enviado">Enviado a empresa</option>
+        </select><br>
+
+        <input type="submit" value="Asignar estado">
+    </form>
+
+    <div id="mensajeExito" style="display: none; font-weight: bold; color: green;"></div>
+
+    <button id="volver" onclick="window.location.href='menuTutor.html'">Volver</button>
+</body>
+</html>

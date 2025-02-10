@@ -1,0 +1,158 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+}
+
+h1, h2 {
+    color: #333;
+    text-align: center;
+}
+
+header {
+    width: calc(100% - 40px); /* Ajustamos el ancho para dejar espacio para los márgenes */
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #fff;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    margin-left: 20px; /* Margen izquierdo */
+    margin-right: 20px; /* Margen derecho */
+}
+
+h1 {
+    margin-top: 120px; /* Ajusta para dar espacio al header fijo */
+    width: 100%;
+    height: 80px;
+    background-color: #e0f7fa;
+    text-align: center;
+    align-content: center;
+}
+
+#formulario {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"], input[type="number"], input[type="date"], select, textarea, input[type="password"], input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Estilos para el botón de cerrar sesión */
+.cerrar-sesion {
+    background-color: #f44336; /* Color rojo */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cerrar-sesion:hover {
+    background-color: #e53935; /* Rojo más oscuro al hacer hover */
+}
+
+/* Estilo para los mensajes de alerta */
+.alerta {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+/* Estilos para los select y otros campos */
+select {
+    background-color: #fafafa;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.desplegable{
+    margin-top: 10%;
+}
+
+#mensajeExito{
+    margin-top: 5%;
+}
+
+#volver {
+    margin-top: 5%;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #7dd081;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#volver:hover {
+    background-color: #58c25d;
+}
+
+
+/* Estilos para la tabla */
+table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+tr:nth-child(even) td {
+    background-color: #f2f2f2;
+}
+
+tr:hover td {
+    background-color: #ddd;
+}

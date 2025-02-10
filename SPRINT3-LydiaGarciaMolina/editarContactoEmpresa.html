@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Editar contacto empresas</title>
+        <link rel='stylesheet' type='text/css' media='screen' href='estilos.css'>
+        <script>
+            window.onload = function () {
+                verificarSesion();
+                cargarDesplegableContactos();
+                document.getElementById("seleccionarBtn").addEventListener("click", mostrarFormulario);
+                document.getElementById("eliminarBtn").addEventListener("click", eliminarContacto);
+
+            };
+
+            function verificarSesion() {
+                var usuario = sessionStorage.getItem('usuario');
+                if (!usuario) {
+                    alert('Debe iniciar sesión primero');
+                    window.location.href = 'login.html';
+                } else {
+                    document.getElementById("bienvenido").textContent = "Bienvenido, " + usuario;
+                }
+            }
+
+            function cerrarSesion() {
+                sessionStorage.removeItem('usuario');
+                window.location.href = 'login.html';
+            }
+
+            /*-----------------SCRPT--------------*/
+
+            function Contacto(id, nombre, cargo, departamento, email, telefono,extension, direccion, horario,
+                acceso, relacion, fechaIngreso, observaciones, sector, notas) {
+                this.id = id;
+                this.nombre = nombre;
+                this.cargo = cargo;
+                this.departamento = departamento;
+                this.email = email;
+                this.telefono = telefono;
+                this.extension = extension;
+                this.direccion = direccion;
+                this.horario = horario;
+                this.acceso = acceso;
+                this.relacion = relacion;
+                this.fechaIngreso = fechaIngreso;
+                this.observaciones = observaciones;
+                this.sector = sector;
+                this.notas = notas;
+            }
+
+            var contactos = [
+                new Contacto(1, 'Tech Solutions', 'Gerente', 'operaciones', 'contacto@techsolutions.com', '(+34) 912345678',
+                    3, 'Calle Tecnología 45, Madrid', '08:00-15:00', 'total', 'empleado', '2020-08-09', '', 'activo',''),
+                new Contacto(2, 'EcoEnergy', 'Director', 'administrador', 'info@ecoenergy.com', '(+34) 917654321',
+                    4, 'Avenida Verde 12, Barcelona', '09:00-17:00', 'limitado', 'directivo', '2019-05-12', '', 'activo', ''),
+                new Contacto(3, 'Marketing Plus', 'Reclutador', 'rrhh', 'reclutador@marketingplus.com', '(+34) 915432187',
+                    2, 'Paseo de la Publicidad 7, Valencia', '10:00-18:00', 'total', 'contratista', '2021-02-22', '', 'licencia', '')
+            ];
+
+            function cargarDesplegableContactos() {
+                let select = document.getElementById("contactoSelect");
+                select.innerHTML = '<option value="">-- Selecciona una empresa --</option>';
+                contactos.forEach(contacto => {
+                    let option = document.createElement("option");
+                    option.value = contacto.id;
+                    option.textContent = contacto.nombre;
+                    select.appendChild(option);
+                });
+            }
+
+            function mostrarFormulario() {
+                let select = document.getElementById("contactoSelect");
+                let contactoId = select.value;
+                if (!contactoId) {
+                    alert("Seleccione una empresa");
+                    return;
+                }
+                let contacto = contactos.find(a => a.id == contactoId);
+                if (contacto) {
+                    document.getElementById("id").value = contacto.id;
+                    document.getElementById("nombre").value = contacto.nombre;
+                    document.getElementById("cargo").value = contacto.cargo;
+                    document.getElementById("departamento").value = contacto.departamento;
+                    document.getElementById("email").value = contacto.email;
+                    document.getElementById("telefono").value = contacto.telefono;
+                    document.getElementById("extension").value = contacto.extension;
+                    document.getElementById("direccion").value = contacto.direccion;
+                    document.getElementById("horario").value = contacto.horario;
+                    document.getElementById("acceso").value = contacto.acceso;
+                    document.getElementById("relacion").value = contacto.relacion;
+                    document.getElementById("fechaIngreso").value = contacto.fechaIngreso;
+                    document.getElementById("observaciones").value = contacto.observaciones;
+                    document.getElementById("sector").value = contacto.sector;
+                    document.getElementById("notas").value = contacto.notas;
+
+                    // Cargar valores en los desplegables
+                    setDesplegableValue("acceso", contacto.acceso);
+                    setDesplegableValue("relacion", contacto.relacion);
+                    setDesplegableValue("sector", contacto.sector);
+                    setDesplegableValue("departamento", contacto.departamento);
+
+                    document.getElementById("formulario").style.display = "block";
+                }
+            }
+
+            function setDesplegableValue(id, valor) {
+                let select = document.getElementById(id);
+                let options = select.getElementsByTagName("option");
+                for (let option of options) {
+                    if (option.value === valor) {
+                        option.selected = true;
+                        break;
+                    }
+                }
+            }
+
+            function guardarCambios(event) {
+                event.preventDefault(); // Evitar el envío del formulario
+                var mensajeExito = document.getElementById("mensajeExito");
+
+                mensajeExito.textContent = "\nLos cambios se han realizado con éxito";
+                mensajeExito.style.display = "block"; // Hacer visible el mensaje de éxito
+
+                formulario.style.display = "none"; // Esconder el formulario
+                desplegable.style.display = "block"; // Mostrar el desplegable
+            }
+
+            function eliminarContacto() {
+                let select = document.getElementById("contactoSelect");
+                let contactoId = select.value;
+                if (!contactoId) {
+                    alert("Seleccione un alumno.");
+                    return;
+                }
+                // Eliminar el alumno del array
+                contactos = contactos.filter(a => a.id != contactoId);
+                
+                // Recargar el desplegable
+                cargarDesplegableContactos();
+
+                // Mostrar mensaje de éxito
+                alert("Contacto eliminado con éxito");
+
+                // Esconder el formulario
+                document.getElementById("formulario").style.display = "none";
+            }
+        </script>
+    </head>
+
+
+    <body>
+        <header>
+            <h2 id="bienvenido">...</h2>
+            <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+        </header> 
+
+        <div class="desplegable">
+            <h3>Seleccionar el contacto de la empresa</h3>
+            Selecciona una empresa:
+            <select id="contactoSelect">
+                <option value="">-- Selecciona una empresa --</option>
+            </select>
+            <br><input type="button" id="seleccionarBtn" value="Seleccionar"><br><br>
+            <input type="button" id="eliminarBtn" value="Eliminar contacto">
+        </div>
+
+        <div id="formulario" style="display: none;">
+            <h1>Información contacto empresa</h1>
+            <p>* son obligatorios</p>
+            <form onsubmit="guardarCambios(event)">
+                Numero de identificacion * <input type="number" id="id" required><br><br>
+                Nombre completo * <input type="text" id="nombre" required><br><br>
+                Cargo o puesto * <input type="text" id="cargo" required><br><br>
+                Departamento *
+                <select id="departamento" required>
+                    <option value="" disabled selected> </option>
+                    <option value="rrhh">Recursos humanos </option>
+                    <option value="administrador">Administrador</option>
+                    <option value="operaciones">Operaciones</option>
+                </select><br><br>
+                Correo electrónico * <input type="text" id="email" required><br><br>
+                Numero de teléfono * <input type="text" id="telefono" placeholder="(+xx) xxxxxxxxx" required><br><br>
+                Extensión telefónica <input type="number" id="extension"><br><br>
+                Direccion <input type="text" id="direccion"><br><br>
+                Horario de trabajo <input type="text" id="horario"><br><br>
+                Nivel de acceso
+                <select id="acceso">
+                    <option value="" disabled selected> </option>
+                    <option value="total">Total</option>
+                    <option value="limitado">Limitado</option>
+                </select><br><br>
+                Relación con la empresa
+                <select id="relacion">
+                    <option value="" disabled selected> </option>
+                    <option value="empleado">Empleado</option>
+                    <option value="contratista">Contratista</option>
+                    <option value="consultor">Consultor</option>
+                    <option value="directivo">Directivo</option>
+                </select><br><br>
+                Fecha de ingreso a la empresa <input type="date" id="fechaIngreso"><br><br>
+                Foto de perfil <input type="file" id="foto" accept=".png, .jpg"><br><br>
+                Observaciones <textarea id="observaciones"></textarea><br><br>
+                Estado de la persona de contacto
+                <select id="sector">
+                    <option value="" disabled selected> </option>
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                    <option value="licencia">En licencia</option>
+                    <option value="baja">Baja</option>
+                </select><br><br>
+                Notas adicionales <textarea id="notas"></textarea><br><br>
+                <br><input type="submit" value="Guardar cambios">
+            </form>
+        </div>
+
+        <div id="mensajeExito" style="display: flex; color: green;"></div>
+        <button id="volver" onclick="window.location.href='menuProfe.html'">Volver</button>
+    </body>
+</html>

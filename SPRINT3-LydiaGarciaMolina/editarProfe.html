@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Edicion profesor</title>
+        <link rel='stylesheet' type='text/css' media='screen' href='estilos.css'>
+        <script>
+            window.onload = function () {
+                verificarSesion();
+                cargarDesplegableProfe(); // Llenar el desplegable con profesores
+                document.getElementById("seleccionarBtn").addEventListener("click", mostrarFormulario);
+            };
+
+            function verificarSesion() {
+                var usuario = sessionStorage.getItem('usuario');
+                if (!usuario) {
+                    alert('Debe iniciar sesión primero');
+                    window.location.href = 'login.html';
+                } else {
+                    document.getElementById("bienvenido").textContent = "Bienvenido, " + usuario;
+                }
+            }
+
+            function cerrarSesion() {
+                sessionStorage.removeItem('usuario');
+                window.location.href = 'login.html';
+            }
+
+            /*----------------SCRIPT--------------------------*/
+
+            function Profesor(nombre, id, email, telefono, direccion, fechaNacimiento, genero, rol,
+                area, contrato, fechaIngreso, estado, notas, password, centro){
+                    this.id = id;
+                    this.nombre=nombre;
+                    this.email = email;
+                    this.telefono = telefono;
+                    this.direccion = direccion;
+                    this.fechaNacimiento = fechaNacimiento;
+                    this.genero = genero;
+                    this.rol=rol;
+                    this.area=area;
+                    this.contrato=contrato; 
+                    this.fechaIngreso=fechaIngreso;
+                    this.estado=estado;
+                    this.notas=notas;
+                    this.password=password;
+                    this.centro=centro;
+            }        
+            
+            var profesores = [
+                new Profesor("Celia", 1, "celia@example.com", "(+34) 123456789", "Calle A, 123", "1980-05-12", "femenino", "profesor",
+                            "lengua", "completo", "2010-09-01", "activo", "Excelente docente", "pass123", "scarlatti"),
+                new Profesor("Alejandro", 2, "alejandro@example.com", "(+34) 987654321", "Calle B, 456", "1975-08-24", "masculino", "coordinador",
+                            "informatica", "parcial", "2015-03-15", "activo", "Gran comunicador", "pass456", "rusiñol"),
+                new Profesor("Carmen", 3, "carmen@example.com", "(+34) 456123789", "Calle C, 789", "1982-11-30", "femenino", "jefeDepartamento",
+                            "informatica", "sustituto", "2012-06-10", "activo", "Metódica y organizada", "pass789", "alpajes"),
+                new Profesor("Goyo", 4, "goyo@example.com", "(+34) 321654987", "Calle D, 321", "1970-02-17", "masculino", "tutor",
+                            "informatica", "completo", "2005-01-20", "licencia", "Investigador destacado", "pass321", "loyola")
+            ];
+
+
+            function cargarDesplegableProfe() {
+                let select = document.getElementById("profesorSelect");
+                select.innerHTML = '<option value="">-- Selecciona un profesor --</option>';
+                profesores.forEach(profesor => {
+                    let option = document.createElement("option");
+                    option.value = profesor.id;
+                    option.textContent = profesor.nombre;
+                    select.appendChild(option);
+                });
+            }
+
+            function mostrarFormulario() {
+                let select = document.getElementById("profesorSelect");
+                let profeId = select.value;
+                if (!profeId) {
+                    alert("Seleccione un profesor.");
+                    return;
+                }
+                let profe = profesores.find(a => a.id == profeId);
+                if (profe) {
+                    document.getElementById("id").value = profe.id;
+                    document.getElementById("nombre").value = profe.nombre;
+                    document.getElementById("email").value = profe.email;
+                    document.getElementById("telefono").value = profe.telefono;
+                    document.getElementById("direccion").value = profe.direccion;
+                    document.getElementById("fechaNacimiento").value = profe.fechaNacimiento;
+                    document.getElementById("genero").value = profe.genero;
+                    document.getElementById("rol").value = profe.rol;
+                    document.getElementById("area").value = profe.area;
+                    document.getElementById("contrato").value = profe.contrato;
+                    document.getElementById("fechaIngreso").value = profe.fechaIngreso;
+                    document.getElementById("notas").value = profe.notas;
+                    document.getElementById("password").value = profe.password;
+                    document.getElementById("centro").value = profe.centro;
+
+                    // Cargar valores en los desplegables
+                    setDesplegableValue("genero", profe.genero);
+                    setDesplegableValue("rol", profe.rol);
+                    setDesplegableValue("area", profe.area);
+                    setDesplegableValue("contrato", profe.contrato);
+                    setDesplegableValue("estado", profe.estado);
+                    setDesplegableValue("centro", profe.centro);
+
+                    document.getElementById("formulario").style.display = "block";
+                }
+            }
+
+            function setDesplegableValue(id, valor) {
+                let select = document.getElementById(id);
+                let options = select.getElementsByTagName("option");
+                for (let option of options) {
+                    if (option.value === valor) {
+                        option.selected = true;
+                        break;
+                    }
+                }
+            }
+
+            function guardarCambios(event) {
+                event.preventDefault(); // Evitar el envío del formulario
+                var mensajeExito = document.getElementById("mensajeExito");
+
+                mensajeExito.textContent = "\nLos cambios se han realizado con éxito";
+                mensajeExito.style.display = "block"; // Hacer visible el mensaje de éxito
+
+                formulario.style.display = "none"; // Esconder el formulario
+                desplegable.style.display = "block"; // Mostrar el desplegable
+            }
+        </script>
+    </head>
+
+
+    <body>
+        <header>
+            <h2 id="bienvenido">...</h2>
+            <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+        </header>
+        <div class="desplegable">
+            <h3>Seleccionar profesor</h3>
+            Selecciona un profesor:
+            <select id="profesorSelect">
+                <option value="">-- Selecciona un profesor --</option>
+            </select>
+            <br><input type="button" id="seleccionarBtn" value="Seleccionar">
+        </div>
+
+        <div id="formulario" style="display: none;">
+            <h1>Información profesor</h1>
+            <p>* son obligatorios</p>
+            <form onsubmit="guardarCambios(event)">
+                Nombre completo * <input type="text" id="nombre" required><br><br>
+                Numero de identificacion * <input type="number" id="id" placeholder="1234..." required><br><br>
+                Correo electrónico * <input type="text" id="email" required><br><br>
+                Numero de teléfono <input type="text" id="telefono" placeholder="(+xx) xxxxxxxxx"><br><br>
+                Direccion * <input type="text" id="direccion" required><br><br>
+                Fecha de nacimiento <input type="date" id="fechaNacimiento"><br><br>
+                Género
+                <select id="genero">
+                    <option value="" disabled selected> </option>
+                    <option value="masculino">Masculino</option>
+                    <option value="femenino">Femenino</option>
+                    <option value="otro">Otro</option>
+                    <option value="noDecirlo">Prefiero no decirlo</option>
+                </select><br><br>
+                Rol *
+                <select id="rol" required>
+                    <option value="" disabled selected> </option>
+                    <option value="profesor">Profesor</option>
+                    <option value="coordinador">Coordinador</option>
+                    <option value="jefeDepartamento">Jefe de departamento</option>
+                    <option value="tutor">Tutor</option>
+                    <option value="practicas">Profesor en prácticas</option>
+                </select><br><br>
+                Departamento o área de especialización
+                <select id="area">
+                    <option value="" disabled selected> </option>
+                    <option value="informatica">Informática</option>
+                    <option value="matematicas">Matemáticas</option>
+                    <option value="lengua">Lengua castella</option>
+                    <option value="ingles">Inglés</option>
+                    <option value="historia">Historia</option>
+                </select><br><br>
+                Tipo de contrato
+                <select id="contrato">
+                    <option value="" disabled selected> </option>
+                    <option value="completo">A tiempo completo</option>
+                    <option value="parcial">Parcial</option>
+                    <option value="sustituto">Sustitución</option>
+                    <option value="practicas">Prácticas</option>
+                </select><br><br>
+                Fecha de ingreso <input type="date" id="fechaIngreso"><br><br>
+                Estado del profesor *
+                <select id="estado" required>
+                    <option value="" disabled selected> </option>
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                    <option value="licencia">En licencia</option>
+                </select><br><br>
+                Foto de perfil <input type="file" id="foto"><br><br>
+                Notas adicionales <textarea id="notas"></textarea><br><br>
+                Contraseña para el profesor * <input type="text" id="password" required><br><br>
+                Centro *
+                <select id="centro" required>
+                    <option value="" disabled selected> </option>
+                    <option value="scarlatti">IES Domenico Scarlatti</option>
+                    <option value="rusiñol">IES Santiago Rusiñol</option>
+                    <option value="alpajes">IES Alpajés</option>
+                    <option value="loyola">Salesianos Loyola</option>
+                </select><br><br>
+
+                <br><input type="submit" value="Guardar cambios">
+            </form>
+        </div>
+
+        <div id="mensajeExito" style="display: flex; color: green;"></div>
+
+        <button id="volver" onclick="window.location.href='menuAdmin.html'">Volver</button>
+        
+    </body>
+</html>
